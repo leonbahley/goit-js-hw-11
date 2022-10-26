@@ -3,6 +3,7 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import axios from 'axios';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import InfiniteScroll from 'infinite-scroll';
 var lightbox = new SimpleLightbox('.gallery a', { captionsData: 'alt' });
 
 const refs = {
@@ -42,15 +43,8 @@ function onSearch(event) {
       if (refs.gallery.innerHTML !== '') {
         refs.loadBtn.classList.remove('is-hidden');
       }
-    });
-  //   const { height: cardHeight } = document
-  //     .querySelector('.gallery')
-  //     .firstElementChild.getBoundingClientRect();
-
-  //   window.scrollBy({
-  //     top: cardHeight * 2,
-  //     behavior: 'smooth',
-  //   });
+    })
+    .catch(error => error);
 }
 
 function onLoadMore() {
@@ -67,15 +61,16 @@ function onLoadMore() {
       }
       Notify.success(`Hooray! We found ${res.data.totalHits} images.`);
       createMarkup(res.data.hits);
-    });
-  //   const { height: cardHeight } = document
-  //     .querySelector('.gallery')
-  //     .firstElementChild.getBoundingClientRect();
+      const { height: cardHeight } = document
+        .querySelector('.gallery')
+        .firstElementChild.getBoundingClientRect();
 
-  //   window.scrollBy({
-  //     top: cardHeight * 2,
-  //     behavior: 'smooth',
-  //   });
+      window.scrollBy({
+        top: cardHeight * 2 + 150,
+        behavior: 'smooth',
+      });
+    })
+    .catch(error => error);
 }
 
 function resetPage() {
