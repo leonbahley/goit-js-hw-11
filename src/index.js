@@ -61,6 +61,7 @@ function onLoadMore() {
       }
       Notify.success(`Hooray! We found ${res.data.totalHits} images.`);
       createMarkup(res.data.hits);
+      page++;
       const { height: cardHeight } = document
         .querySelector('.gallery')
         .firstElementChild.getBoundingClientRect();
