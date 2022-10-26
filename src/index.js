@@ -3,7 +3,6 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import axios from 'axios';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-import InfiniteScroll from 'infinite-scroll';
 var lightbox = new SimpleLightbox('.gallery a', { captionsData: 'alt' });
 
 const refs = {
@@ -16,7 +15,12 @@ let searchQuery = '';
 let page = 1;
 
 refs.searchForm.addEventListener('submit', onSearch);
-refs.loadBtn.addEventListener('click', onLoadMore);
+window.addEventListener('scroll', () => {
+  const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
+  if (scrollTop + clientHeight > scrollHeight - 5) {
+    onLoadMore();
+  }
+});
 
 function onSearch(event) {
   event.preventDefault();
@@ -40,9 +44,6 @@ function onSearch(event) {
       createMarkup(res.data.hits);
       lightbox.refresh();
       page++;
-      if (refs.gallery.innerHTML !== '') {
-        refs.loadBtn.classList.remove('is-hidden');
-      }
     })
     .catch(error => error);
 }
@@ -77,7 +78,6 @@ function onLoadMore() {
 function resetPage() {
   page = 1;
   refs.gallery.innerHTML = '';
-  refs.loadBtn.classList.add('is-hidden');
 }
 
 function createMarkup(data) {
